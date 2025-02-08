@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Pertanyaan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-4 md:p-0">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-20 w-full max-w-5xl">
+
+            <!-- Formulir Utama -->
+            <div class="bg-white p-6 md:p-8 rounded-lg shadow-md md:col-span-3">
+                <h2 class="text-xl md:text-2xl font-bold mb-4">Buat Pertanyaan</h2>
+                <form id="questionForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm md:text-base font-medium mb-1">Pertanyaan:</label>
+                        <input type="text" name="question"
+                            class="w-full px-2 py-1 md:px-3 md:py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm md:text-base font-medium mb-1">Jawaban Yes (default: Yes):</label>
+                        <input type="text" name="answer_yes"
+                            class="w-full px-2 py-1 md:px-3 md:py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            placeholder="Yes">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm md:text-base font-medium mb-1">Jawaban No (default: No):</label>
+                        <input type="text" name="answer_no"
+                            class="w-full px-2 py-1 md:px-3 md:py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            placeholder="No">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm md:text-base font-medium mb-1">Pesan:</label>
+                        <textarea name="description"
+                            class="w-full px-2 py-1 md:px-3 md:py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none min-h-[100px]"></textarea>
+                    </div>
+
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 md:py-3 rounded w-full transition duration-200">Simpan</button>
+                </form>
+
+                <div id="result" class="mt-4 hidden">
+                    <p class="text-green-600 text-sm md:text-base">Pertanyaan berhasil disimpan!</p>
+                    <div class="flex items-center space-x-2 mt-2">
+                        <input id="resultUrl" type="text" class="border p-2 w-full rounded" readonly>
+                        <button id="copyButton" class="bg-gray-300 hover:bg-gray-400 text-sm p-2 rounded">Copy
+                            URL</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container History -->
+            <div class="bg-white p-6 md:p-8 rounded-lg shadow-md overflow-y-auto md:col-span-2 text-sm">
+                <h3 class="text-lg font-semibold mb-4">History Pertanyaan</h3>
+                <ul id="historyList" class="list-disc pl-5 text-blue-600 text-sm md:text-base space-y-2">
+                    <!-- Riwayat pertanyaan akan ditampilkan di sini -->
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const limit = 4;  // Jumlah item per halaman
+
+        document.getElementById('questionForm').onsubmit = async function (e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+
+            let response = await fetch('/submit', {
+                method: 'POST',
+                body: formData
+            });
+
+            let result = await response.json();
+
+            if (result.status === 'success') {
+                let question = formData.get("question");
+                let questionLink = `/view/${result.id}`;
+
+                document.getElementById('result').classList.remove('hidden');
+                document.getElementById('resultUrl').value = window.location.origin + questionLink;
+
+                // Simpan ke localStorage
+                let history = JSON.parse(localStorage.getItem("history")) || [];
+                history.push({ question, link: questionLink });
+                localStorage.setItem("history", JSON.stringify(history));
+
+                // Tampilkan history terbaru
+                loadHistory();
+            }
+        };
+
+        // Fungsi untuk menyalin URL ke clipboard
+        document.getElementById('copyButton').addEventListener('click', function () {
+            let urlField = document.getElementById('resultUrl');
+            urlField.select();
+            urlField.setSelectionRange(0, 99999); // Untuk mobile
+
+            document.execCommand('copy');
+
+            // Ubah teks tombol menjadi "Copied!"
+            let copyButton = document.getElementById('copyButton');
+            copyButton.textContent = "Copied!";
+            copyButton.classList.add("bg-green-400");
+
+            // Kembalikan teks setelah 2 detik
+            setTimeout(() => {
+                copyButton.textContent = "Copy";
+                copyButton.classList.remove("bg-green-400");
+            }, 2000);
+        });
+
+        async function loadHistory(page = 1) {
+            try {
+                let response = await fetch(`/history?page=${page}&limit=${limit}`);
+                let result = await response.json();
+
+                let historyList = document.getElementById("historyList");
+                historyList.innerHTML = "";
+
+                result.data.forEach(item => {
+                    let listItem = document.createElement("li");
+                    listItem.classList.add("mb-4", "p-3", "border", "rounded", "shadow-sm", "bg-gray-50");
+
+                    // Pertanyaan
+                    let questionText = document.createElement("p");
+                    questionText.textContent = item.question;
+                    questionText.classList.add("font-semibold", "mb-2");
+
+                    // Tombol Copy URL
+                    let copyButton = document.createElement("button");
+                    copyButton.textContent = "Copy URL";
+                    copyButton.classList.add("bg-blue-500", "text-white", "px-3", "py-1", "rounded", "text-sm");
+
+                    // Event Copy
+                    copyButton.onclick = () => {
+                        let url = `${window.location.origin}/view/${item.id}`;
+                        navigator.clipboard.writeText(url).then(() => {
+                            copyButton.textContent = "Copied!";
+                            copyButton.classList.add("bg-green-500");
+
+                            setTimeout(() => {
+                                copyButton.textContent = "Copy URL";
+                                copyButton.classList.remove("bg-green-500");
+                            }, 2000);
+                        }).catch(err => console.error("Copy failed:", err));
+                    };
+
+                    // Susun elemen ke dalam list item
+                    listItem.appendChild(questionText);
+                    listItem.appendChild(copyButton);
+
+                    // Tambahkan ke list
+                    historyList.appendChild(listItem);
+                });
+
+                // Perbarui pagination
+                updatePagination(result.total_pages, page);
+            } catch (error) {
+                console.error("Error loading history:", error);
+            }
+        }
+
+        // Fungsi untuk memperbarui pagination
+        function updatePagination(totalPages, currentPage) {
+            let pagination = document.getElementById("pagination");
+            pagination.innerHTML = "";
+
+            for (let i = 1; i <= totalPages; i++) {
+                let btn = document.createElement("button");
+                btn.textContent = i;
+                btn.classList.add("px-3", "py-1", "border", "rounded", "mx-1", "text-sm");
+
+                if (i === currentPage) {
+                    btn.classList.add("bg-blue-500", "text-white");
+                } else {
+                    btn.classList.add("bg-gray-200", "hover:bg-gray-300");
+                    btn.onclick = () => loadHistory(i);
+                }
+
+                pagination.appendChild(btn);
+            }
+        }
+
+        // Muat history saat halaman dimuat
+        loadHistory();
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+[
+    {
+        "id": "e9dcacbe-776a-4de8-911c-1375247eb398",
+        "question": "boleh pinjam seratus?",
+        "description": "Makasih bree",
+        "answer_yes": "siap",
+        "answer_no": "engga dulu"
+    },
+    {
+        "id": "e8c086ca-e6a3-47c6-9341-9d9bf514d486",
+        "question": "will you be my valentine??",
+        "description": "uwaauu",
+        "answer_yes": "of course",
+        "answer_no": "maybe later"
+    },
+    {
+        "id": "fa812fcb-7965-4695-a604-2112fdb8cf3f",
+        "question": "Agar silaturahmi tidak putus, boleh pinjam seratus??",
+        "description": "thenkyu",
+        "answer_yes": "ngohey",
+        "answer_no": "oh noo"
+    }
+]

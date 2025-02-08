@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .moving-button {
+            transition: all 0.2s ease-out;
+        }
+
+        /* Prevent scrolling when button moves */
+        body {
+            overflow: hidden;
+        }
+
+        /* Make buttons more touchable on mobile */
+        @media (max-width: 640px) {
+            button {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+    </style>
+</head>
+
+<body class="h-screen w-screen flex items-center justify-center bg-gray-100">
+    <div class="w-full max-w-lg p-4 sm:p-8">
+        <div class="text-center mb-4 sm:mb-8">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-4 px-4">
+                {{ response.question}}
+            </h2>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <button id="answerYes"
+                class="w-32 sm:w-auto bg-green-500 hover:bg-green-600 text-white px-6 sm:px-10 py-3 rounded transition-colors duration-200 text-xl sm:text-xl">
+                {{ response.answer_yes }}
+            </button>
+
+            <button id="answerNo"
+                class="w-32 sm:w-auto moving-button bg-red-500 hover:bg-red-600 text-white px-6 sm:px-10 py-3 rounded transition-colors duration-200 text-xl sm:text-xl">
+                {{ response.answer_no }}
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const btnYes = document.getElementById("answerYes");
+            const btnNo = document.getElementById("answerNo");
+
+            function moveButton(e) {
+                // Get viewport dimensions with padding for edge cases
+                const padding = 20;
+                const maxX = window.innerWidth - btnNo.offsetWidth - padding;
+                const maxY = window.innerHeight - btnNo.offsetHeight - padding;
+
+                // Generate random position within safe viewport area
+                const randomX = Math.max(padding, Math.min(Math.floor(Math.random() * maxX), maxX));
+                const randomY = Math.max(padding, Math.min(Math.floor(Math.random() * maxY), maxY));
+
+                // Apply new position
+                btnNo.style.position = 'fixed';
+                btnNo.style.left = randomX + 'px';
+                btnNo.style.top = randomY + 'px';
+
+                // Ensure button is visible
+                btnNo.style.zIndex = '1000';
+            }
+
+            // Calculate safe movement area based on screen size
+            function updateMovementArea() {
+                // Reset position when screen size changes
+                btnNo.style.position = 'static';
+            }
+
+            // Move on hover/touch
+            btnNo.addEventListener("mouseenter", moveButton);
+            btnNo.addEventListener("touchstart", moveButton, { passive: true });
+
+            // Handle Yes button click
+            btnYes.addEventListener("click", function () {
+                Swal.fire({
+                    text: "{{ response.description }}",
+                    imageUrl: "https://media.tenor.com/8MJrOC0AS54AAAAi/hwahwa.gif",
+                    imageWidth: 200, // Sesuaikan ukuran gambar
+                    imageAlt: "Hwahwa GIF",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#3085d6",
+                });
+            });
+
+            // Update movement area when screen resizes
+            window.addEventListener('resize', updateMovementArea);
+
+            // Initial setup
+            updateMovementArea();
+        });
+    </script>
+</body>
+
+</html>
