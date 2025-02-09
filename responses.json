@@ -1,12 +1,5 @@
 [
     {
-        "id": "e9dcacbe-776a-4de8-911c-1375247eb398",
-        "question": "boleh pinjam seratus?",
-        "description": "Makasih bree",
-        "answer_yes": "siap",
-        "answer_no": "engga dulu"
-    },
-    {
         "id": "e8c086ca-e6a3-47c6-9341-9d9bf514d486",
         "question": "will you be my valentine??",
         "description": "uwaauu",
@@ -19,5 +12,19 @@
         "description": "thenkyu",
         "answer_yes": "ngohey",
         "answer_no": "oh noo"
+    },
+    {
+        "id": "f745230d-9288-4b50-b037-7875611fdc57",
+        "question": "U wanna go grab ice cream?",
+        "description": "kamsahamnida",
+        "answer_yes": "Yaps",
+        "answer_no": "No!"
+    },
+    {
+        "id": "688019af-5279-45ba-9717-426ef2533835",
+        "question": "Do you love me?",
+        "description": "I love you too",
+        "answer_yes": "Yes",
+        "answer_no": "No"
     }
 ]

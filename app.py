@@ -9,7 +9,7 @@ app = Flask(__name__)
 @app.route('/submit', methods=['POST'])
 def submit():
     try:
-        print("Received Data:", request.form)  # Debugging
+        #print("Received Data:", request.form)  # Debugging
 
         # Validasi input
         if 'question' not in request.form:
@@ -29,7 +29,7 @@ def submit():
 
         # Baca data lama
         responses = get_all_responses()
-        print("Existing Data:", responses)  # Debugging
+        #print("Existing Data:", responses)  # Debugging
 
         # Tambahkan data baru
         responses.append(data)

@@ -12,11 +12,6 @@
             transition: all 0.2s ease-out;
         }
 
-        /* Prevent scrolling when button moves */
-        body {
-            overflow: hidden;
-        }
-
         /* Make buttons more touchable on mobile */
         @media (max-width: 640px) {
             button {
@@ -27,26 +22,68 @@
     </style>
 </head>
 
-<body class="h-screen w-screen flex items-center justify-center bg-gray-100">
-    <div class="w-full max-w-lg p-4 sm:p-8">
-        <div class="text-center mb-4 sm:mb-8">
-            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-4 px-4">
-                {{ response.question}}
-            </h2>
+<body class="p-0 bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
+    <nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <span class="self-center text-2xl whitespace-nowrap dark:text-white italic">Answer<span
+                        class="font-bold">This!</span></span>
+            </a>
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                    <li class="inline-flex items-center">
+                        <a href="/"
+                            class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-white dark:hover:text-gray-200 underline">
+                            Buat versi kamu, yuk!
+                        </a>
+                    </li>
+                </ol>
+            </nav>
         </div>
+    </nav>
+    <div class="flex justify-center items-center h-screen">
+        <div class="w-full max-w-lg p-4 sm:p-8">
+            <div class="text-center mb-4 sm:mb-8 dark:bg-gray-800 py-3 rounded">
+                <div id="questionText">
+                    <div class="flex justify-center mb-4">
+                        <img src="https://media.tenor.com/HoocNDDrUKgAAAAi/rexx.gif" 
+                            alt="Loading Animation"
+                            class="w-40 object-contain">
+                    </div>
+                    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-4 px-4">
+                        {{ response.question }}
+                    </h2>
+                </div>
 
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <button id="answerYes"
-                class="w-32 sm:w-auto bg-green-500 hover:bg-green-600 text-white px-6 sm:px-10 py-3 rounded transition-colors duration-200 text-xl sm:text-xl">
-                {{ response.answer_yes }}
-            </button>
+                <div id="descContainer" class="hidden">
+                    <!-- GIF kedua -->
+                    <div class="flex justify-center mb-4">
+                        <img id="gifYes" src="https://media.tenor.com/8MJrOC0AS54AAAAi/hwahwa.gif" 
+                            alt="Hwahwa GIF"
+                            class="w-40 object-contain">
+                    </div>
 
-            <button id="answerNo"
-                class="w-32 sm:w-auto moving-button bg-red-500 hover:bg-red-600 text-white px-6 sm:px-10 py-3 rounded transition-colors duration-200 text-xl sm:text-xl">
-                {{ response.answer_no }}
-            </button>
+                    <!-- Deskripsi -->
+                    <p id="description" class="text-gray-800 dark:text-white text-2xl font-semibold p-4">
+                        {{ response.description }}
+                    </p>
+                </div>
+            </div>
+
+            <div id="answerButtons" class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button id="answerYes"
+                    class="dark:bg-gray-100 dark:hover:bg-gray-300 text-white dark:text-gray-700 font-bold px-6 sm:px-10 py-3 rounded transition-colors duration-200 text-xl">
+                    {{ response.answer_yes }}
+                </button>
+
+                <button id="answerNo"
+                    class="moving-button bg-red-500 hover:bg-red-600 text-white font-bold px-6 sm:px-10 py-3 rounded transition-colors duration-200 text-xl">
+                    {{ response.answer_no }}
+                </button>
+            </div>
         </div>
     </div>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -82,24 +119,23 @@
             btnNo.addEventListener("mouseenter", moveButton);
             btnNo.addEventListener("touchstart", moveButton, { passive: true });
 
-            // Handle Yes button click
-            btnYes.addEventListener("click", function () {
-                Swal.fire({
-                    text: "{{ response.description }}",
-                    imageUrl: "https://media.tenor.com/8MJrOC0AS54AAAAi/hwahwa.gif",
-                    imageWidth: 200, // Sesuaikan ukuran gambar
-                    imageAlt: "Hwahwa GIF",
-                    confirmButtonText: "OK",
-                    confirmButtonColor: "#3085d6",
-                });
-            });
-
             // Update movement area when screen resizes
             window.addEventListener('resize', updateMovementArea);
 
             // Initial setup
             updateMovementArea();
         });
+    </script>
+
+    <script>
+        document.getElementById("answerYes").addEventListener("click", function () {
+        // Sembunyikan pertanyaan dan tombol
+        document.getElementById("questionText").classList.add("hidden");
+        document.getElementById("answerButtons").classList.add("hidden");
+
+        // Tampilkan deskripsi dan GIF kedua
+        document.getElementById("descContainer").classList.remove("hidden");
+    });
     </script>
 </body>
 

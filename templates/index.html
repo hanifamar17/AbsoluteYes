@@ -8,39 +8,71 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 min-h-screen p-4 md:p-0">
-    <div class="flex items-center justify-center min-h-screen">
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-20 w-full max-w-5xl">
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-slate-300 min-h-screen p-0 md:p-0">
+    <nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <span class="self-center text-2xl whitespace-nowrap dark:text-white italic">Answer<span
+                        class="font-bold">This!</span></span>
+            </a>
+
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                    <li class="inline-flex items-center">
+                        <a href="#home" id="homeLink"
+                            class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <a href="#history" id="historyLink"
+                                class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Histori
+                                Pertanyaan</a>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+
+        </div>
+    </nav>
+
+    <div class="flex items-center justify-center">
+        <div class="w-full max-w-3xl p-4 md:p-6">
 
             <!-- Formulir Utama -->
-            <div class="bg-white p-6 md:p-8 rounded-lg shadow-md md:col-span-3">
-                <h2 class="text-xl md:text-2xl font-bold mb-4">Buat Pertanyaan</h2>
+            <div id="homeContent" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded shadow-md">
+                <h2 class="text-xl dark:text-white md:text-2xl font-bold mb-4">Buat Pertanyaan</h2>
                 <form id="questionForm" class="space-y-4">
                     <div>
                         <label class="block text-sm md:text-base font-medium mb-1">Pertanyaan:</label>
-                        <input type="text" name="question"
-                            class="w-full px-2 py-1 md:px-3 md:py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                            required>
+                        <input type="text" name="question" class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1 md:px-3 md:py-2 
+                            border border-gray-300 dark:border-gray-600 rounded
+                            focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
                     </div>
 
                     <div>
-                        <label class="block text-sm md:text-base font-medium mb-1">Jawaban Yes (default: Yes):</label>
-                        <input type="text" name="answer_yes"
-                            class="w-full px-2 py-1 md:px-3 md:py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                            placeholder="Yes">
+                        <label class="block text-sm md:text-base font-medium mb-1">Custom Jawaban Yes (default: Yes):</label>
+                        <input type="text" name="answer_yes" class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1 md:px-3 md:py-2 
+                            border border-gray-300 dark:border-gray-600 rounded
+                            focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Yes" required>
                     </div>
 
                     <div>
-                        <label class="block text-sm md:text-base font-medium mb-1">Jawaban No (default: No):</label>
-                        <input type="text" name="answer_no"
-                            class="w-full px-2 py-1 md:px-3 md:py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                            placeholder="No">
+                        <label class="block text-sm md:text-base font-medium mb-1">Custom Jawaban No (default: No):</label>
+                        <input type="text" name="answer_no" class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1 md:px-3 md:py-2 
+                            border border-gray-300 dark:border-gray-600 rounded
+                            focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="No" required>
                     </div>
 
                     <div>
-                        <label class="block text-sm md:text-base font-medium mb-1">Pesan:</label>
+                        <div class="mb-1">
+                            <label class="block text-sm md:text-base font-medium">Pesan:</label>
+                            <label class="text-xs md:text-sm">Kasih pesan kalo dia jawabnya iya</label>
+                        </div>
+                        
                         <textarea name="description"
-                            class="w-full px-2 py-1 md:px-3 md:py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none min-h-[100px]"></textarea>
+                            class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1 md:px-3 md:py-2 border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none min-h-[100px]" required></textarea>
                     </div>
 
                     <button type="submit"
@@ -48,29 +80,82 @@
                 </form>
 
                 <div id="result" class="mt-4 hidden">
-                    <p class="text-green-600 text-sm md:text-base">Pertanyaan berhasil disimpan!</p>
+                    <p class="text-sm md:text-base">Pertanyaan berhasil disimpan!</p>
                     <div class="flex items-center space-x-2 mt-2">
-                        <input id="resultUrl" type="text" class="border p-2 w-full rounded" readonly>
-                        <button id="copyButton" class="bg-gray-300 hover:bg-gray-400 text-sm p-2 rounded">Copy
-                            URL</button>
+                        <input id="resultUrl" type="text"
+                            class="bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-500 p-2 w-full rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            readonly>
+
+                        <button id="copyButton"
+                            class="dark:bg-blue-700 dark:hover:bg-blue-800 p-2 rounded text-gray-900 dark:text-white transition duration-200">
+                            Copy
+                        </button>
                     </div>
                 </div>
             </div>
 
             <!-- Container History -->
-            <div class="bg-white p-6 md:p-8 rounded-lg shadow-md overflow-y-auto md:col-span-2 text-sm">
-                <h3 class="text-lg font-semibold mb-4">History Pertanyaan</h3>
-                <ul id="historyList" class="list-disc pl-5 text-blue-600 text-sm md:text-base space-y-2">
+            <div id="historyContent" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded shadow-md hidden">
+                <h3 class="text-xl dark:text-white font-bold mb-4">History Pertanyaan</h3>
+                <span id="historyList" class="list-disc pl-5 dark:text-slate:300 text-sm md:text-base space-y-2">
                     <!-- Riwayat pertanyaan akan ditampilkan di sini -->
-                </ul>
+                </span>
+
+                <!-- Pagination -->
+                <div id="paginationContainer" class="mt-8 flex justify-center">
+                    <div id="pagination" class="flex space-x-2"></div>
+                </div>
             </div>
 
         </div>
     </div>
 
     <script>
+        // Fungsi untuk menampilkan konten dan mengubah warna breadcrumb
+        function showContentBasedOnHash() {
+            let hash = window.location.hash || "#home"; // Default ke #home jika tidak ada hash
+            let homeContent = document.getElementById("homeContent");
+            let historyContent = document.getElementById("historyContent");
+
+            // Menampilkan konten berdasarkan hash
+            if (hash === "#history") {
+                homeContent.classList.add("hidden");
+                historyContent.classList.remove("hidden");
+            } else {
+                homeContent.classList.remove("hidden");
+                historyContent.classList.add("hidden");
+            }
+
+            // Update warna breadcrumb berdasarkan halaman aktif
+            updateBreadcrumb(hash);
+        }
+
+        // Fungsi untuk mengupdate warna breadcrumb
+        function updateBreadcrumb(activePage) {
+            let homeLink = document.getElementById("homeLink");
+            let historyLink = document.getElementById("historyLink");
+
+            // Reset semua warna ke default
+            homeLink.classList.remove("text-white", "dark:text-white");
+            historyLink.classList.remove("text-white", "dark:text-white");
+
+            // Tambahkan gaya khusus untuk halaman aktif
+            if (activePage === "#home") {
+                homeLink.classList.add("text-white", "dark:text-white");
+            } else if (activePage === "#history") {
+                historyLink.classList.add("text-white", "dark:text-white");
+            }
+        }
+
+        // Jalankan fungsi saat halaman dimuat & setiap kali hash berubah
+        window.addEventListener("load", showContentBasedOnHash);
+        window.addEventListener("hashchange", showContentBasedOnHash);
+
+    </script>
+
+    <script>
         let currentPage = 1;
-        const limit = 4;  // Jumlah item per halaman
+        const limit = 10;  // Jumlah item per halaman
 
         document.getElementById('questionForm').onsubmit = async function (e) {
             e.preventDefault();
@@ -111,14 +196,17 @@
             // Ubah teks tombol menjadi "Copied!"
             let copyButton = document.getElementById('copyButton');
             copyButton.textContent = "Copied!";
-            copyButton.classList.add("bg-green-400");
+
+            // Tambahkan kelas untuk background dark
+            copyButton.classList.add("bg-gray-200", "text-gray-800", "dark:bg-gray-500", "dark:text-white");
 
             // Kembalikan teks setelah 2 detik
             setTimeout(() => {
                 copyButton.textContent = "Copy";
-                copyButton.classList.remove("bg-green-400");
-            }, 2000);
+                copyButton.classList.remove("bg-gray-200", "text-gray-800", "dark:bg-gray-500");
+            }, 1200);
         });
+
 
         async function loadHistory(page = 1) {
             try {
@@ -130,34 +218,45 @@
 
                 result.data.forEach(item => {
                     let listItem = document.createElement("li");
-                    listItem.classList.add("mb-4", "p-3", "border", "rounded", "shadow-sm", "bg-gray-50");
+                    listItem.classList.add(
+                        "mb-4", "p-3", "border", "dark:border-gray-600", "rounded", "shadow-sm",
+                        "bg-gray-50", "dark:bg-gray-700", "flex", "justify-between", "items-center"
+                    );
 
-                    // Pertanyaan
-                    let questionText = document.createElement("p");
-                    questionText.textContent = item.question;
-                    questionText.classList.add("font-semibold", "mb-2");
+                    // Container pertanyaan & link
+                    let questionContainer = document.createElement("div");
 
-                    // Tombol Copy URL
+                    // Pertanyaan sebagai Link
+                    let questionLink = document.createElement("a");
+                    questionLink.href = `${window.location.origin}/view/${item.id}`;
+                    questionLink.textContent = item.question;
+                    questionLink.classList.add("font-semibold", "mb-2", "text-blue-600", "hover:underline", "dark:text-blue-400");
+
+                    questionContainer.appendChild(questionLink);
+
+                    // Tombol Copy URL 
                     let copyButton = document.createElement("button");
-                    copyButton.textContent = "Copy URL";
-                    copyButton.classList.add("bg-blue-500", "text-white", "px-3", "py-1", "rounded", "text-sm");
+                    copyButton.textContent = "Copy";
+                    copyButton.classList.add(
+                        "bg-blue-700", "text-white", "px-3", "py-1", "rounded", "text-sm",
+                        "transition", "duration-300", "ease-in-out",
+                        "dark:bg-blue-600", "dark:hover:bg-blue-500"
+                    );
 
                     // Event Copy
                     copyButton.onclick = () => {
                         let url = `${window.location.origin}/view/${item.id}`;
                         navigator.clipboard.writeText(url).then(() => {
                             copyButton.textContent = "Copied!";
-                            copyButton.classList.add("bg-green-500");
 
                             setTimeout(() => {
-                                copyButton.textContent = "Copy URL";
-                                copyButton.classList.remove("bg-green-500");
-                            }, 2000);
+                                copyButton.textContent = "Copy";
+                            }, 1200);
                         }).catch(err => console.error("Copy failed:", err));
                     };
 
                     // Susun elemen ke dalam list item
-                    listItem.appendChild(questionText);
+                    listItem.appendChild(questionContainer);
                     listItem.appendChild(copyButton);
 
                     // Tambahkan ke list
@@ -171,29 +270,55 @@
             }
         }
 
+
         // Fungsi untuk memperbarui pagination
         function updatePagination(totalPages, currentPage) {
             let pagination = document.getElementById("pagination");
             pagination.innerHTML = "";
 
+            // Tombol "Previous"
+            let prevButton = document.createElement("button");
+            prevButton.textContent = "Prev";
+            prevButton.classList.add("px-3", "py-1", "border", "dark:border-gray-600", "rounded", "mx-1", "text-sm",
+                "bg-gray-200", "hover:bg-gray-300", "dark:bg-gray-700", "dark:hover:bg-gray-600", "dark:text-white");
+            if (currentPage > 1) {
+                prevButton.onclick = () => loadHistory(currentPage - 1);
+            } else {
+                prevButton.classList.add("opacity-50", "cursor-not-allowed");
+            }
+            pagination.appendChild(prevButton);
+
+            // Tombol angka halaman
             for (let i = 1; i <= totalPages; i++) {
                 let btn = document.createElement("button");
                 btn.textContent = i;
-                btn.classList.add("px-3", "py-1", "border", "rounded", "mx-1", "text-sm");
+                btn.classList.add("px-3", "py-1", "border", "dark:border-gray-600", "rounded", "mx-1", "text-sm");
 
                 if (i === currentPage) {
-                    btn.classList.add("bg-blue-500", "text-white");
+                    btn.classList.add("bg-blue-500", "text-white", "dark:bg-blue-600");
                 } else {
-                    btn.classList.add("bg-gray-200", "hover:bg-gray-300");
+                    btn.classList.add("bg-gray-200", "hover:bg-gray-300", "dark:bg-gray-700", "dark:hover:bg-gray-600", "dark:text-white");
                     btn.onclick = () => loadHistory(i);
                 }
 
                 pagination.appendChild(btn);
             }
+
+            // Tombol "Next"
+            let nextButton = document.createElement("button");
+            nextButton.textContent = "Next";
+            nextButton.classList.add("px-3", "py-1", "border", "dark:border-gray-600", "rounded", "mx-1", "text-sm",
+                "bg-gray-200", "hover:bg-gray-300", "dark:bg-gray-700", "dark:hover:bg-gray-600", "dark:text-white");
+            if (currentPage < totalPages) {
+                nextButton.onclick = () => loadHistory(currentPage + 1);
+            } else {
+                nextButton.classList.add("opacity-50", "cursor-not-allowed");
+            }
+            pagination.appendChild(nextButton);
         }
 
-        // Muat history saat halaman dimuat
-        loadHistory();
+        // Muat history pertama kali saat halaman dimuat
+        document.addEventListener("DOMContentLoaded", () => loadHistory());
 
     </script>
 </body>
