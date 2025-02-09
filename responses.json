@@ -26,5 +26,19 @@
         "description": "I love you too",
         "answer_yes": "Yes",
         "answer_no": "No"
+    },
+    {
+        "id": "23c9fb10-c92d-4812-a43f-6bdbf71794c1",
+        "question": "Ikan lele atau ikan gurame",
+        "description": "Wah selera kita sama!",
+        "answer_yes": "Ikan lele",
+        "answer_no": "Ikan gurame"
+    },
+    {
+        "id": "773e5f45-493f-4874-a708-00a6440b70f3",
+        "question": "do you love me ?",
+        "description": "selamat anda mendapatkan uang senilai Rp.100",
+        "answer_yes": "yoi",
+        "answer_no": ""
     }
 ]
