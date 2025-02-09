@@ -65,7 +65,8 @@
                             </div>
                             <input type="text" name="answer_yes" class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-2 py-1 md:px-3 md:py-2 
                             border border-gray-300 dark:border-gray-600 rounded
-                            focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Yes" value="Yes" required>
+                            focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Yes" value="Yes"
+                                required>
                         </div>
 
                         <div>
@@ -92,13 +93,15 @@
                         </div>
 
                         <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 md:py-3 rounded w-full transition duration-200">Generate Pertanyaan</button>
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 md:py-3 rounded w-full transition duration-200">Generate
+                            Pertanyaan</button>
                     </form>
 
                     <div id="result" class="mt-4 hidden">
                         <div class="mb-1">
                             <p class="text-sm md:text-base text-green-400 font-semibold">Pertanyaan berhasil dibuat!</p>
-                            <p class="text-xs md:text-sm">Salin URL di bawah untuk dibagikan ke dia atau lihat pertanyaan yang dibuat di histori pertanyaan :)</p>
+                            <p class="text-xs md:text-sm">Salin URL di bawah untuk dibagikan ke dia atau lihat
+                                pertanyaan yang dibuat di histori pertanyaan :)</p>
                         </div>
                         <div class="flex items-center space-x-2 mt-2">
                             <input id="resultUrl" type="text"
@@ -116,15 +119,11 @@
                 <!-- Container History -->
                 <div id="historyContent" class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded shadow-md hidden">
                     <h3 class="text-xl dark:text-white font-bold mb-1">History Pertanyaan</h3>
-                    <p class="text-xs md:text-sm mb-2">Kamu bisa membuka pertanyaan yang sudah dibuat sebelumnya atau membagikannya kepada orang lain.</p>
-                    <span id="historyList" class="list-disc pl-5 dark:text-slate:300 text-sm md:text-base space-y-2">
+                    <p class="text-xs md:text-sm mb-2">Kamu bisa membuka pertanyaan yang sudah dibuat sebelumnya atau
+                        membagikannya kepada orang lain.</p>
+                    <span id="historyList" class="pl-5 dark:text-slate:300 text-sm md:text-base space-y-2">
                         <!-- Riwayat pertanyaan akan ditampilkan di sini -->
                     </span>
-
-                    <!-- Pagination -->
-                    <div id="paginationContainer" class="mt-8 flex justify-center">
-                        <div id="pagination" class="flex space-x-2"></div>
-                    </div>
                 </div>
 
             </div>
@@ -146,20 +145,21 @@
             </div>
 
             <div class="text-slate-200 text-sm flex justify-center pt-12">
-                <p>Made by wkwk, inspired by <a href="https://www.instagram.com/ruuuruiya?igsh=NTc4MTIwNjQ2YQ==" target="_blank"
+                <p>Made by wkwk, inspired by <a href="https://www.instagram.com/ruuuruiya?igsh=NTc4MTIwNjQ2YQ=="
+                        target="_blank"
                         class="text-blue-400 underline hover:text-blue-600 hover:scale-95">@ruuuruiya</a></p>
             </div>
         </footer>
     </div>
     <script>
-        document.getElementById("whatsappShare").addEventListener("click", function() {
+        document.getElementById("whatsappShare").addEventListener("click", function () {
             // Ambil URL halaman saat ini
             const currentURL = encodeURIComponent(window.location.href);
             const message = "Check out this link: " + currentURL;
-    
+
             // Buat URL WhatsApp
             const whatsappURL = `https://api.whatsapp.com/send?text=${message}`;
-    
+
             // Buka di tab baru
             window.open(whatsappURL, "_blank");
         });
@@ -209,9 +209,6 @@
     </script>
 
     <script>
-        let currentPage = 1;
-        const limit = 10;  // Jumlah item per halaman
-
         document.getElementById('questionForm').onsubmit = async function (e) {
             e.preventDefault();
             let formData = new FormData(this);
@@ -262,19 +259,26 @@
             }, 1200);
         });
 
-
-        async function loadHistory(page = 1) {
+        async function loadHistory() {
             try {
-                let response = await fetch(`/history?page=${page}&limit=${limit}`);
+                let response = await fetch("/history");
                 let result = await response.json();
 
+                //console.log("Data dari API:", result); // Cek apakah data ada
+
                 let historyList = document.getElementById("historyList");
-                historyList.innerHTML = "";
+                historyList.innerHTML = ""; // Bersihkan sebelum menampilkan data baru
+
+                if (result.data.length === 0) {
+                    historyList.innerHTML = "<p class='text-gray-500 dark:text-gray-400'>Belum ada riwayat pertanyaan.</p>";
+                    return;
+                }
 
                 result.data.forEach(item => {
-                    let listItem = document.createElement("li");
+                    // Buat container untuk setiap item
+                    let listItem = document.createElement("div"); // Perbaikan di sini
                     listItem.classList.add(
-                        "mb-4", "p-3", "border", "dark:border-gray-600", "rounded", "shadow-sm",
+                        "p-3", "border", "dark:border-gray-600", "rounded", "shadow-sm",
                         "bg-gray-50", "dark:bg-gray-700", "flex", "justify-between", "items-center"
                     );
 
@@ -285,7 +289,7 @@
                     let questionLink = document.createElement("a");
                     questionLink.href = `${window.location.origin}/view/${item.id}`;
                     questionLink.textContent = item.question;
-                    questionLink.classList.add("font-semibold", "mb-2", "text-blue-600", "hover:underline", "dark:text-blue-400");
+                    questionLink.classList.add("font-semibold", "text-blue-600", "hover:underline", "dark:text-blue-400");
 
                     questionContainer.appendChild(questionLink);
 
@@ -314,66 +318,16 @@
                     listItem.appendChild(questionContainer);
                     listItem.appendChild(copyButton);
 
-                    // Tambahkan ke list
+                    // Tambahkan ke historyList
                     historyList.appendChild(listItem);
                 });
-
-                // Perbarui pagination
-                updatePagination(result.total_pages, page);
             } catch (error) {
                 console.error("Error loading history:", error);
             }
         }
 
-
-        // Fungsi untuk memperbarui pagination
-        function updatePagination(totalPages, currentPage) {
-            let pagination = document.getElementById("pagination");
-            pagination.innerHTML = "";
-
-            // Tombol "Previous"
-            let prevButton = document.createElement("button");
-            prevButton.textContent = "Prev";
-            prevButton.classList.add("px-3", "py-1", "border", "dark:border-gray-600", "rounded", "mx-1", "text-sm",
-                "bg-gray-200", "hover:bg-gray-300", "dark:bg-gray-700", "dark:hover:bg-gray-600", "dark:text-white");
-            if (currentPage > 1) {
-                prevButton.onclick = () => loadHistory(currentPage - 1);
-            } else {
-                prevButton.classList.add("opacity-50", "cursor-not-allowed");
-            }
-            pagination.appendChild(prevButton);
-
-            // Tombol angka halaman
-            for (let i = 1; i <= totalPages; i++) {
-                let btn = document.createElement("button");
-                btn.textContent = i;
-                btn.classList.add("px-3", "py-1", "border", "dark:border-gray-600", "rounded", "mx-1", "text-sm");
-
-                if (i === currentPage) {
-                    btn.classList.add("bg-blue-500", "text-white", "dark:bg-blue-600");
-                } else {
-                    btn.classList.add("bg-gray-200", "hover:bg-gray-300", "dark:bg-gray-700", "dark:hover:bg-gray-600", "dark:text-white");
-                    btn.onclick = () => loadHistory(i);
-                }
-
-                pagination.appendChild(btn);
-            }
-
-            // Tombol "Next"
-            let nextButton = document.createElement("button");
-            nextButton.textContent = "Next";
-            nextButton.classList.add("px-3", "py-1", "border", "dark:border-gray-600", "rounded", "mx-1", "text-sm",
-                "bg-gray-200", "hover:bg-gray-300", "dark:bg-gray-700", "dark:hover:bg-gray-600", "dark:text-white");
-            if (currentPage < totalPages) {
-                nextButton.onclick = () => loadHistory(currentPage + 1);
-            } else {
-                nextButton.classList.add("opacity-50", "cursor-not-allowed");
-            }
-            pagination.appendChild(nextButton);
-        }
-
-        // Muat history pertama kali saat halaman dimuat
-        document.addEventListener("DOMContentLoaded", () => loadHistory());
+        // Panggil fungsi setelah halaman dimuat
+        document.addEventListener("DOMContentLoaded", loadHistory);
 
     </script>
 </body>

@@ -73,24 +73,13 @@ def view_response(id):
 @app.route('/history', methods=['GET'])
 def history():
     responses = get_all_responses()[::-1]  # Urutkan dari terbaru ke terlama
-    
-    # Ambil parameter page dan limit dari request (default: page=1, limit=5)
-    page = int(request.args.get('page', 1))
-    limit = int(request.args.get('limit', 5))
 
-    # Hitung offset (data yang harus dilewati)
-    start = (page - 1) * limit
-    end = start + limit
-
-    # Ambil hanya data sesuai halaman yang diminta
-    paginated_responses = responses[start:end]
+    # Ambil hanya 5 data terbaru
+    latest_responses = responses[:10]
 
     return jsonify({
-        "data": paginated_responses,
-        "page": page,
-        "limit": limit,
-        "total": len(responses),
-        "total_pages": (len(responses) + limit - 1) // limit
+        "data": latest_responses,
+        "total": len(latest_responses)
     })
 
 # Halaman utama untuk input pertanyaan
