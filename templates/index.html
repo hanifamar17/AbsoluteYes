@@ -92,9 +92,17 @@
                                 required></textarea>
                         </div>
 
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 md:py-3 rounded w-full transition duration-200">Generate
-                            Pertanyaan</button>
+                        <button id="submitBtn" type="submit"
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 md:py-3 rounded w-full transition duration-200 flex items-center justify-center">
+                            <span id="btnText">Generate Pertanyaan</span>
+                            <svg id="btnSpinner" class="hidden w-5 h-5 ml-2 text-white animate-spin"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8H4z"></path>
+                            </svg>
+                        </button>
                     </form>
 
                     <div id="result" class="mt-4 hidden">
@@ -211,30 +219,49 @@
     <script>
         document.getElementById('questionForm').onsubmit = async function (e) {
             e.preventDefault();
+
             let formData = new FormData(this);
+            let btn = document.getElementById("submitBtn");
+            let btnText = document.getElementById("btnText");
+            let btnSpinner = document.getElementById("btnSpinner");
 
-            let response = await fetch('/submit', {
-                method: 'POST',
-                body: formData
-            });
+            // Aktifkan spinner dan ubah teks
+            btnSpinner.classList.remove("hidden");
+            btnText.textContent = "Generating...";
+            btn.disabled = true; // Nonaktifkan tombol agar tidak diklik dua kali
 
-            let result = await response.json();
+            try {
+                let response = await fetch('/submit', {
+                    method: 'POST',
+                    body: formData
+                });
 
-            if (result.status === 'success') {
-                let question = formData.get("question");
-                let questionLink = `/view/${result.id}`;
+                let result = await response.json();
 
-                document.getElementById('result').classList.remove('hidden');
-                document.getElementById('resultUrl').value = window.location.origin + questionLink;
+                if (result.status === 'success') {
+                    let question = formData.get("question");
+                    let questionLink = `/view/${result.id}`;
 
-                // Simpan ke localStorage
-                let history = JSON.parse(localStorage.getItem("history")) || [];
-                history.push({ question, link: questionLink });
-                localStorage.setItem("history", JSON.stringify(history));
+                    document.getElementById('result').classList.remove('hidden');
+                    document.getElementById('resultUrl').value = window.location.origin + questionLink;
 
-                // Tampilkan history terbaru
-                loadHistory();
+                    // Simpan ke localStorage
+                    let history = JSON.parse(localStorage.getItem("history")) || [];
+                    history.push({ question, link: questionLink });
+                    localStorage.setItem("history", JSON.stringify(history));
+
+                    // Tampilkan history terbaru
+                    loadHistory();
+                }
+            } catch (error) {
+                console.error("Error submitting form:", error);
+                alert("Terjadi kesalahan, coba lagi.");
             }
+
+            // Matikan spinner dan kembalikan tombol ke semula
+            btnSpinner.classList.add("hidden");
+            btnText.textContent = "Generate Pertanyaan";
+            btn.disabled = false;
         };
 
         // Fungsi untuk menyalin URL ke clipboard
